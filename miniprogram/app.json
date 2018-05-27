@@ -7,5 +7,12 @@
       "version": "dev",
       "provider": "touristappid"
     }
+  },
+  "window":{
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "滑动菜单栏",
+    "backgroundColor": "#eeeeee",
+    "backgroundTextStyle": "dark"
   }
 }

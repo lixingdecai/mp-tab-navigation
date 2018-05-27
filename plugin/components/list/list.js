@@ -86,9 +86,10 @@ Component({
             if (e.width) length += e.width;
           })
           // 水平居中
-          this.setData({
-            scrollLeft: length - ((wx.getSystemInfoSync().windowWidth - this.data.currentWidth) / 2),
-          })
+          if (i === index -1)
+            this.setData({
+              scrollLeft: length - ((wx.getSystemInfoSync().windowWidth - this.data.currentWidth) / 2),
+            })
         });
         // length += cate1Info[i].cate1Name.length || 0;
       }
