@@ -28,6 +28,8 @@ Component({
     );
   },
 
+
+
   methods: {
     chooseCatalog: function(event) {
       // console.log(index);
@@ -56,47 +58,40 @@ Component({
       this.calcTextLength(this.data.activeIndex)
     },
 
+    calAllScrollItem() {
+      let query = wx.createSelectorQuery().in(this);
+      let nodeRef = query.selectAll(`.scroll-view-item`);
+      this.currentWidth = 0;
+      nodeRef.boundingClientRect().exec(ret => {
+        if (!ret || !ret.length) return;
+        this.setData({
+          calScrollItems: ret[0]
+        });
+        // console.log('currentWidth -> ' + this.currentWidth);
+      });
+    },
 
     // 计算文本长度
     calcTextLength: function(index = 0) {
       if (!index || !this.data.cate1Info || !this.data.cate1Info.length) return 0
       let length = 0;
       const cate1Info = this.data.cate1Info;
-      console.log(cate1Info[index].shortName);
-      // 如果存在page 中
-      // let query = wx.createSelectorQuery().in(this);
-      // 如果存在于自定义组件 里
-      let query = wx.createSelectorQuery().in(this);
-      let nodeRef = query.select(`#${cate1Info[index].shortName}`);
-      this.data.currentWidth = 0;
-      nodeRef.boundingClientRect().exec((ret) => {
-        console.log(ret);
-        this.data.currentWidth = ret[0].width;
-        // console.log('currentWidth -> ' + this.currentWidth);
-      });
+      const currentWidth = this.data.calScrollItems[index].width;
       for (let i = 0; i < index; i += 1) {
-        // 如果存在page 中
-        // let query = wx.createSelectorQuery().in(this);
-        // 如果存在于自定义组件 里
-        query = wx.createSelectorQuery().in(this);
-        nodeRef = query.select(`#${cate1Info[i].shortName}`);
-        nodeRef.boundingClientRect().exec((ret) => {
-          ret.forEach(e => {
-            console.log(e);
-            if (e.width) length += e.width;
-          })
-          // 水平居中
-          if (i === index -1)
-            this.setData({
-              scrollLeft: length - ((wx.getSystemInfoSync().windowWidth - this.data.currentWidth) / 2),
-            })
-        });
-        // length += cate1Info[i].cate1Name.length || 0;
+        length += this.data.calScrollItems[i].width;
       }
+      this.setData({
+        scrollLeft: length - ((wx.getSystemInfoSync().windowWidth - currentWidth) / 2)
+      });
       // console.log('calcTextLength: ' + length);
       return length;
     },
   },
+
+  ready: function() {
+    this.calAllScrollItem();
+  },
+
   attached: function(){
     // 可以在这里发起网络请求获取插件的数据
     this.setData({
